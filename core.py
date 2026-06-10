@@ -1,9 +1,3 @@
-"""
-https://github.com/mr-r0ot/BaleAccountApi
-
-"""
-
-
 from bs4 import BeautifulSoup
 from html import unescape
 import re
@@ -23,8 +17,11 @@ firefox_option.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64
 
 def wait_full_xpath(driver, xp):
     while True:
-        try:driver.find_element(By.XPATH,xp);break
-        except:sleep(3)
+        try:
+            driver.find_element(By.XPATH,xp)
+            break
+        except:
+            sleep(3)
 
 
 
@@ -67,23 +64,23 @@ def extract_message(message_html):
 
 avg_sleep = 0.2
 class BaleAccountApi:
-    def start(hide=False):
+    def start(hide=True):
         if hide == True:
             firefox_option.add_argument("--headless")
-        driver = webdriver.Firefox()
+        driver = webdriver.Firefox(options=firefox_option)
         driver.get("https://web.bale.ai/login?redirectTo=/")
         sleep(avg_sleep)
         return driver
 
     def send_otp_code(driver, phone_number):
-        wait_full_xpath(driver, '/html/body/div[1]/div/div/div/div/div[3]/div[2]/div/button')
+        wait_full_xpath(driver,'/html/body/div[1]/div/div/div/div/div[3]/div[2]/div/button')
         driver.find_element(By.XPATH,'/html/body/div[1]/div/div/div/div/div[3]/div[2]/div/button').click()
 
         wait_full_xpath(driver, '//*[@id="Mobile number"]')
         driver.find_element(By.XPATH,'//*[@id="Mobile number"]').send_keys(phone_number)
         driver.find_element(By.XPATH,'/html/body/div[1]/div/div/div/div[2]/div/button').click()
 
-        sleep(avg_sleep)
+        sleep(4.5)
         try:
             driver.find_element(By.XPATH,'//*[@id="Login Code"]')
             return True
@@ -94,12 +91,10 @@ class BaleAccountApi:
         wait_full_xpath(driver, '//*[@id="Login Code"]')
         driver.find_element(By.XPATH,'//*[@id="Login Code"]').clear()
         driver.find_element(By.XPATH,'//*[@id="Login Code"]').send_keys(str(otp_code))
-        sleep(avg_sleep)
-        try:
-            driver.find_element(By.XPATH,'/html/body/div[1]/div/div/div/div[1]/div/div[1]')
-            sleep(1)
+        sleep(4.5)
+        if 'Chat' in driver.page_source:
             return True
-        except:
+        else:
             return False
     
     def get_page_source(driver):
