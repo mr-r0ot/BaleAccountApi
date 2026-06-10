@@ -21,7 +21,10 @@ import BaleAccountApi
 
 
 # ساخت یک سشن جدید
-home = BaleAccountApi.start()
+home = BaleAccountApi.start(hide=False) # اگر می خواهید مرورگر مخفی بشه
+#home = BaleAccountApi.start(hide=True) # اگر می خواید نمایش داده بشه
+
+
 
 # ارسال یه کد تایید(سشن همواره باید به تابع ها پاس داده شود)
 if BaleAccountApi.send_otp_code(home, "09123456789"):
